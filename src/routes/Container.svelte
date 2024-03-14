@@ -3,6 +3,7 @@
     import News from "./News.svelte";
     import { articles, search } from "./store";
     import Search from "./Search.svelte";
+    import { fly, fade } from "svelte/transition";
 
     const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -31,15 +32,18 @@
 </script>
 
 <Search />
-<section>
-    {#if $articles?.length > 0}
+{#if $articles?.length > 0}
+    <section
+        in:fly={{ y: 50, duration: 500, delay: 500 }}
+        out:fade={{ duration: 500 }}
+    >
         {#each $articles.slice(0, 12) as article}
             <News {...article} />
         {/each}
-    {:else}
-        <p>No news to display.</p>
-    {/if}
-</section>
+    </section>
+{:else}
+    <p in:fade={{ duration: 500, delay: 500 }}>No news to display.</p>
+{/if}
 
 <style>
     section {
