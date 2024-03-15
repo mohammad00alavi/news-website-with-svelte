@@ -1,5 +1,6 @@
 <script>
     import Button from "../../components/Button.svelte";
+    import Counter from "../../components/Counter.svelte";
     import News from "../News.svelte";
 
     export let data;
@@ -7,11 +8,9 @@
 
 <main>
     <Button href="/" --bgColor="#e6ecff" --textColor="#000">Back</Button>
-
+    <Counter text="News today" count={data.count} />
     {#if data}
-        <News {...data.article}>
-            <p slot="content"></p>
-        </News>
+        <News {...data.article} />
     {:else}
         <p>No data found</p>
     {/if}
