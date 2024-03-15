@@ -1,4 +1,6 @@
 <script>
+    import Image from "../components/Image.svelte";
+
     /**
      * @type {string}
      */
@@ -19,10 +21,14 @@
      * @type {string}
      */
     export let publishedAt;
+    /**
+     * @type {string}
+     */
+    export let content;
 </script>
 
 <article>
-    <img src={urlToImage} alt={title} />
+    <Image src={urlToImage} alt={urlToImage} />
     <header>
         <div>
             <h2>{title}</h2>
@@ -30,7 +36,11 @@
         </div>
         <p>{publishedAt}</p>
     </header>
-    <p>{description}</p>
+    {#if content}
+        <p>{content}</p>
+    {:else}
+        <p>{description}</p>
+    {/if}
 </article>
 
 <style>
@@ -41,23 +51,19 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
-    img {
-        width: 100%;
-        max-height: 300px;
-        border-radius: 8px;
-    }
-
     header h2 {
         margin: 0;
         color: #333;
     }
-
     header p {
         color: #666;
         font-size: 0.9em;
     }
-
+    :global(img) {
+        width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+    }
     p {
         font-size: 1em;
         line-height: 1.5;
