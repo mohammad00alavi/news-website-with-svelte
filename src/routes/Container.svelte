@@ -1,49 +1,21 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
     import News from "./News.svelte";
-    import { articles, search } from "./store";
     import Search from "./Search.svelte";
     import { fly, fade } from "svelte/transition";
-    import * as sampleData from "../data/sample-data.json";
-
-    const apiKey = import.meta.env.VITE_API_KEY;
-
-    let subscription: () => void;
-
-    onMount(() => {
-        subscription = search.subscribe(async ($search) => {
-            if ($search.length >= 3) {
-                try {
-                    const res = await fetch(
-                        `https://newsapi.org/v2/everything?q=${$search}&from=2024-03-10&lang=en&pageSize=30&sortBy=popularity&apiKey=${apiKey}`
-                    );
-                    const data = await res.json();
-                    const filteredArticles = data.articles.filter(
-                        (article) => article.urlToImage && article.author
-                    );
-                    articles.set(filteredArticles);
-                } catch (err) {
-                    console.error("Error fetching data from API:", err);
-                    articles.set(sampleData.articles);
-                }
-            } else {
-                articles.set([]);
-            }
-        });
-    });
-
-    onDestroy(() => {
-        if (subscription) subscription();
-    });
+    import { type Articles } from "./Types";
+    /**
+     * @type {Articles}
+     */
+    export let articles;
 </script>
 
 <Search />
-{#if $articles?.length > 0}
+{#if articles?.length > 0}
     <section
         in:fly={{ y: 50, duration: 500, delay: 500 }}
         out:fade={{ duration: 500 }}
     >
-        {#each $articles.slice(0, 12) as article}
+        {#each articles.slice(0, 12) as article}
             <a class="link" href="/{encodeURIComponent(article.title)}">
                 <News {...article} />
             </a>

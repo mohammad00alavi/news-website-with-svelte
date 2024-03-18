@@ -13,7 +13,7 @@
         <BreadcrumbsItem href="/">Home</BreadcrumbsItem>
     </Breadcrumbs>
     <Counter text="News today" count={data.articles.length} />
-    <Container />
+    <Container articles={data?.articles} />
 </main>
 
 <style>

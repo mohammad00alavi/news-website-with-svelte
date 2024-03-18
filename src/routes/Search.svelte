@@ -1,8 +1,32 @@
 <script>
-    import { search } from "./store";
+    import { goto } from "$app/navigation";
+    let searchTerm = "";
+
+    function serachFunc() {
+        goto(`/?q=${encodeURIComponent(searchTerm)}`, {
+            replaceState: true,
+        });
+    }
+
+    function handleSearch() {
+        if (searchTerm && searchTerm.length >= 3) {
+            serachFunc();
+        }
+    }
+
+    function handleKeyDown(e) {
+        if (e.code === "Enter") {
+            handleSearch();
+        }
+    }
 </script>
 
-<input bind:value={$search} placeholder="Search for latest news..." />
+<input
+    bind:value={searchTerm}
+    on:keydown={handleKeyDown}
+    placeholder="Search for latest news..."
+/>
+<button on:click={handleSearch}>Search</button>
 
 <style>
     input {
