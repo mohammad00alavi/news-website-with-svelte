@@ -2,11 +2,15 @@
     import News from "./News.svelte";
     import Search from "./Search.svelte";
     import { fly, fade } from "svelte/transition";
-    import { type Articles } from "./Types";
+    import { onMount } from "svelte";
+    import { articlesStore } from "./store";
     /**
      * @type {Articles}
      */
     export let articles;
+    onMount(() => {
+        articlesStore.set(articles);
+    });
 </script>
 
 <Search />
@@ -16,7 +20,7 @@
         out:fade={{ duration: 500 }}
     >
         {#each articles.slice(0, 12) as article}
-            <a class="link" href="/{encodeURIComponent(article.title)}">
+            <a class="link" href="/{encodeURIComponent(article.title)}" data-sveltekit-preload-data>
                 <News {...article} />
             </a>
         {/each}

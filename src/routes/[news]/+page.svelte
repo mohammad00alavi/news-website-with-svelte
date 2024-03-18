@@ -1,26 +1,48 @@
 <script>
     import Breadcrumbs from "../../components/Breadcrumbs.svelte";
     import BreadcrumbsItem from "../../components/BreadcrumbsItem.svelte";
-    import Button from "../../components/Button.svelte";
+    import LinkButton from "../../components/LinkButton.svelte";
     import Counter from "../../components/Counter.svelte";
     import News from "../News.svelte";
     import { page } from "$app/stores";
+    import { onDestroy, onMount } from "svelte";
+    import { articlesStore } from "../store";
 
-    export let data;
+    let article = {};
+    let count = 0;
+
+    /**
+     * @type {() => void}
+     */
+    let unsubscribe;
+    //TODO - store doesn't work correctly
+    onMount(async () => {
+        unsubscribe = await articlesStore.subscribe((items) => {
+            count = items.length;
+            article = items.find((item) => item.title === $page.params.news);
+        });
+    });
+    onDestroy(() => {
+        unsubscribe();
+    });
 </script>
 
 <main>
-    <Button href="/" --bgColor="#e6ecff" --textColor="#000">Back</Button>
+    <!-- TODO - Fix back href -->
+    <LinkButton href="/" --bgColor="#e6ecff" --textColor="#000">Back</LinkButton
+    >
     <Breadcrumbs>
         <BreadcrumbsItem href="/">Home</BreadcrumbsItem>
         <!-- TODO - fix the error with the news link breadcrumb link -->
-        <BreadcrumbsItem href="/{$page.url.pathname}"
-            >{data.article.title.slice(0, 20)}</BreadcrumbsItem
-        >
+        {#if article}
+            <BreadcrumbsItem href="/{$page.url.pathname}"
+                >{article.title}</BreadcrumbsItem
+            >
+        {/if}
     </Breadcrumbs>
-    <Counter text="News today" count={data.count} />
-    {#if data}
-        <News {...data.article} />
+    <Counter text="News today" {count} />
+    {#if article}
+        <News {...article} />
     {:else}
         <p>No data found</p>
     {/if}
