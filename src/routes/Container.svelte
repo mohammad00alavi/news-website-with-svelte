@@ -2,6 +2,7 @@
     import News from "./News.svelte";
     import Search from "./Search.svelte";
     import { fly, fade } from "svelte/transition";
+    import { type Articles } from "./Types";
     import { onMount } from "svelte";
     import { articlesStore } from "./store";
     /**
